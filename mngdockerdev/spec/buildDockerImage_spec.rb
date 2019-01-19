@@ -7,8 +7,12 @@ describe 'TestBuildDockerImage' do
 
   context 'help message is displayed' do
     it 'exits zero when run' do
-      stdout, stderr, status = stubbed_env.execute(BUILD_IMAGE_SCRIPT)
-      expect(status.exitstatus).to eq 0
+      @stdout, @stderr, @status = stubbed_env.execute(BUILD_IMAGE_SCRIPT)
+      expect(@status.exitstatus).to eq 0
+    end
+    it 'returns help message' do
+      @stdout, @stderr, @status = stubbed_env.execute(BUILD_IMAGE_SCRIPT)
+      expect(@stdout).to include('buildDockerImage')
     end
   end
 

@@ -1,1 +1,20 @@
 #!/bin/bash
+
+function printHelpMessage()
+{
+  cat <<helpDoc
+  buildDockerImage will build a new image from the Dockerfile in this directory.
+  If a previous image of this name exists and is not running, it will be removed.
+  A currently running container will not be impacted.
+
+  ./buildDockerImage -h  # print the help message
+  ./buildDockerImage     # build the dev image
+  ./buildDockerImage -r  # build the release image
+helpDoc
+}
+function main()
+{
+  printHelpMessage
+}
+
+main "$@"
