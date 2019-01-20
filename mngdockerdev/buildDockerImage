@@ -12,9 +12,16 @@ function printHelpMessage()
   ./buildDockerImage -r  # build the release image
 helpDoc
 }
+
 function main()
 {
-  printHelpMessage
+  while getopts ":h" opt; do
+    case ${opt} in
+      h) printHelpMessage
+         exit
+        ;;
+    esac
+  done
 }
 
 main "$@"
