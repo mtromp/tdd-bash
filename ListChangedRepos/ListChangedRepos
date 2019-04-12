@@ -1,7 +1,10 @@
-#!/bin/bash
+#!/bin/bash -u
 
 function main()
 {
+  gitStatus=$(git status)
+  echo ${gitStatus}
+
   exit 0
 }
 
