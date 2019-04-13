@@ -2,6 +2,14 @@
 
 function main()
 {
+  gitStatus=$(git status)
+
+  if [[ ${gitStatus} =~ "nothing to commit" ]]; then
+    exit 0
+  fi
+
+  echo "${gitStatus}"
+
   exit 0
 }
 
