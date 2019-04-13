@@ -8,11 +8,14 @@ DIRTY_DIR="Changes not staged for commit:\n"
 ADD_HELP="(use git add <file>... to update what will be committed)\n"
 CHECKOUT_HELP="(use git checkout -- <file>... to discard changes in working directory)\n"
 
+PWD_DIRECTORY='/Users/mtromp/workspace'
+
 describe 'TestGitStatus' do
   include Rspec::Bash
   let(:stubbed_env) { create_stubbed_env }
 
   let!(:git_mock) { stubbed_env.stub_command('git') }
+  let!(:pwd_mock) { stubbed_env.stub_command('pwd') }
 
   context 'git repository is up-to-date' do
     before(:each) do
@@ -35,11 +38,12 @@ describe 'TestGitStatus' do
       git_mock.with_args('status')
         .returns_exitstatus(0)
         .outputs("#{MASTER_BRANCH}#{DIRTY_DIR}#{ADD_HELP}#{CHECKOUT_HELP}")
+      pwd_mock.outputs("#{PWD_DIRECTORY}")
     end
 
     it 'prints directory when repo has changed files' do
       @stdout, @stderr, @status = stubbed_env.execute("#{SCRIPT}")
-      expect(@stdout).to be == "#{MASTER_BRANCH}#{DIRTY_DIR}#{ADD_HELP}#{CHECKOUT_HELP}"
+      expect(@stdout).to be == "#{PWD_DIRECTORY}\n"
     end
   end
 end

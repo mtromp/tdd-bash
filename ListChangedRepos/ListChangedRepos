@@ -8,7 +8,7 @@ function main()
     exit 0
   fi
 
-  echo "${gitStatus}"
+  echo "$(pwd)"
 
   exit 0
 }
