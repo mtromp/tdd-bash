@@ -7,6 +7,8 @@ CLEAN_DIR="nothing to commit, working tree clean"
 DIRTY_DIR="Changes not staged for commit:\n"
 ADD_HELP="(use git add <file>... to update what will be committed)\n"
 CHECKOUT_HELP="(use git checkout -- <file>... to discard changes in working directory)\n"
+MASTER_AHEAD="On branch master\nYour branch is ahead of \'origin/master\' by 1 commit.\n"
+PUSH_HELP="  (use \"git push\" to publish your local commits)\n\n"
 
 PWD_DIRECTORY='/Users/mtromp/workspace'
 
@@ -42,6 +44,19 @@ describe 'TestGitStatus' do
     end
 
     it 'prints directory when repo has changed files' do
+      @stdout, @stderr, @status = stubbed_env.execute("#{SCRIPT}")
+      expect(@stdout).to be == "#{PWD_DIRECTORY}\n"
+    end
+  end
+  context 'git repository is ahead of remote' do
+    before(:each) do
+      git_mock.with_args('status')
+              .returns_exitstatus(0)
+              .outputs("#{MASTER_AHEAD}#{PUSH_HELP}#{CLEAN_DIR}")
+      pwd_mock.outputs("#{PWD_DIRECTORY}")
+    end
+
+    it 'prints directory when local commits exist' do
       @stdout, @stderr, @status = stubbed_env.execute("#{SCRIPT}")
       expect(@stdout).to be == "#{PWD_DIRECTORY}\n"
     end

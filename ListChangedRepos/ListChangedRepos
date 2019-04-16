@@ -4,6 +4,9 @@ function main()
 {
   gitStatus=$(git status)
 
+  if [[ ${gitStatus} =~ "Your branch is ahead" ]]; then
+    echo "$(pwd)"
+  fi
   if [[ ${gitStatus} =~ "nothing to commit" ]]; then
     exit 0
   fi
