@@ -1,17 +1,25 @@
-#!/bin/bash
+#!/bin/bash -u
 
+export isDirty;
+
+function isDirtyDirectory()
+{
+  isDirty="false"
+  gitStatus=$(git status)
+  if [[ ${gitStatus} =~ "Your branch is ahead" ]]; then
+    isDirty="true"
+  fi
+  if [[ ${gitStatus} =~ "Changes not staged" ]]; then
+    isDirty="true"
+  fi
+}
 function main()
 {
-  gitStatus=$(git status)
+  isDirtyDirectory
 
-  if [[ ${gitStatus} =~ "Your branch is ahead" ]]; then
+  if [[ ${isDirty} == "true" ]]; then
     echo "$(pwd)"
   fi
-  if [[ ${gitStatus} =~ "nothing to commit" ]]; then
-    exit 0
-  fi
-
-  echo "$(pwd)"
 
   exit 0
 }

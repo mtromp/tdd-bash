@@ -18,11 +18,14 @@ describe 'TestGitStatus' do
 
   let!(:git_mock) { stubbed_env.stub_command('git') }
   let!(:pwd_mock) { stubbed_env.stub_command('pwd') }
+  let!(:find_mock) { stubbed_env.stub_command('find') }
 
   context 'git repository is up-to-date' do
     before(:each) do
       git_mock.with_args('status')
         .outputs("#{MASTER_BRANCH}#{CLEAN_DIR}")
+      find_mock.with_args('. -name .git -type d -prune')
+        .outputs('./tdd-bash/.git\n')
     end
 
     it 'exits with zero when git repo is up-to-date' do
@@ -40,6 +43,8 @@ describe 'TestGitStatus' do
       git_mock.with_args('status')
         .returns_exitstatus(0)
         .outputs("#{MASTER_BRANCH}#{DIRTY_DIR}#{ADD_HELP}#{CHECKOUT_HELP}")
+      find_mock.with_args('. -name .git -type d -prune')
+        .outputs('./tdd-bash/.git\n')
       pwd_mock.outputs("#{PWD_DIRECTORY}")
     end
 
