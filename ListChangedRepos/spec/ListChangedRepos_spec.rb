@@ -10,6 +10,9 @@ CHECKOUT_HELP="(use git checkout -- <file>... to discard changes in working dire
 MASTER_AHEAD="On branch master\nYour branch is ahead of \'origin/master\' by 1 commit.\n"
 PUSH_HELP="  (use \"git push\" to publish your local commits)\n\n"
 
+STAGED_DIR="Changes to be committed:\n"
+STAGED_HELP="  (use \"git reset HEAD <file>...\" to unstage)\n\n"
+
 PWD_DIRECTORY='/Users/mtromp/workspace'
 
 describe 'TestGitStatus' do
@@ -41,14 +44,26 @@ describe 'TestGitStatus' do
   context 'git repository has changed files' do
     before(:each) do
       git_mock.with_args('status')
-        .returns_exitstatus(0)
-        .outputs("#{MASTER_BRANCH}#{DIRTY_DIR}#{ADD_HELP}#{CHECKOUT_HELP}")
+              .returns_exitstatus(0)
+              .outputs("#{MASTER_BRANCH}#{DIRTY_DIR}#{ADD_HELP}#{CHECKOUT_HELP}")
       find_mock.with_args('. -name .git -type d -prune')
-        .outputs('./tdd-bash/.git\n')
+               .outputs('./tdd-bash/.git\n')
       pwd_mock.outputs("#{PWD_DIRECTORY}")
     end
 
     it 'prints directory when repo has changed files' do
+      @stdout, @stderr, @status = stubbed_env.execute("#{SCRIPT}")
+      expect(@stdout).to be == "#{PWD_DIRECTORY}\n"
+    end
+  end
+  context 'git repository has staged changes' do
+    before(:each) do
+      git_mock.with_args('status')
+              .returns_exitstatus(0)
+              .outputs("#{MASTER_BRANCH}#{STAGED_DIR}#{STAGED_HELP}")
+      pwd_mock.outputs("#{PWD_DIRECTORY}")
+    end
+    it 'prints directory when repo has staged changes' do
       @stdout, @stderr, @status = stubbed_env.execute("#{SCRIPT}")
       expect(@stdout).to be == "#{PWD_DIRECTORY}\n"
     end

@@ -12,6 +12,9 @@ function isDirtyDirectory()
   if [[ ${gitStatus} =~ "Changes not staged" ]]; then
     isDirty="true"
   fi
+  if [[ ${gitStatus} =~ "Changes to be committed" ]]; then
+    isDirty="true"
+  fi
 }
 function main()
 {
