@@ -18,12 +18,19 @@ function isDirtyDirectory()
 }
 function main()
 {
-  isDirtyDirectory
+  # get all the directory paths that contain a '.git' directory
+  gitDirectories=( $(find . -type d -name ".git" -exec dirname {} \; ) )
 
-  if [[ ${isDirty} == "true" ]]; then
-    echo "$(pwd)"
-  fi
+  for directory in "${gitDirectories[@]}"; do
+    (
+      cd "${directory}"
 
+      isDirtyDirectory
+      if [[ ${isDirty} == "true" ]]; then
+        echo "$(pwd)"
+      fi
+    )
+  done
   exit 0
 }
 

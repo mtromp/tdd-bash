@@ -26,9 +26,9 @@ describe 'TestGitStatus' do
   context 'git repository is up-to-date' do
     before(:each) do
       git_mock.with_args('status')
-        .outputs("#{MASTER_BRANCH}#{CLEAN_DIR}")
-      find_mock.with_args('. -name .git -type d -prune')
-        .outputs('./tdd-bash/.git\n')
+              .outputs("#{MASTER_BRANCH}#{CLEAN_DIR}")
+      find_mock.with_args('.' , '-type', 'd', '-name', '".git"', '-exec', 'dirname', '{}', '\;')
+               .outputs('./tdd-bash\n')
     end
 
     it 'exits with zero when git repo is up-to-date' do
@@ -46,8 +46,8 @@ describe 'TestGitStatus' do
       git_mock.with_args('status')
               .returns_exitstatus(0)
               .outputs("#{MASTER_BRANCH}#{DIRTY_DIR}#{ADD_HELP}#{CHECKOUT_HELP}")
-      find_mock.with_args('. -name .git -type d -prune')
-               .outputs('./tdd-bash/.git\n')
+      find_mock.with_args('.' , '-type', 'd', '-name', '".git"', '-exec', 'dirname', '{}', '\;')
+               .outputs('./tdd-bash\n')
       pwd_mock.outputs("#{PWD_DIRECTORY}")
     end
 
@@ -61,6 +61,9 @@ describe 'TestGitStatus' do
       git_mock.with_args('status')
               .returns_exitstatus(0)
               .outputs("#{MASTER_BRANCH}#{STAGED_DIR}#{STAGED_HELP}")
+      find_mock.with_args(anything)
+               .outputs('./tdd-bash\n')
+
       pwd_mock.outputs("#{PWD_DIRECTORY}")
     end
     it 'prints directory when repo has staged changes' do
@@ -73,6 +76,8 @@ describe 'TestGitStatus' do
       git_mock.with_args('status')
               .returns_exitstatus(0)
               .outputs("#{MASTER_AHEAD}#{PUSH_HELP}#{CLEAN_DIR}")
+      find_mock.with_args('.' , '-type', 'd', '-name', '".git"', '-exec', 'dirname', '{}', '\;')
+               .outputs('./tdd-bash\n')
       pwd_mock.outputs("#{PWD_DIRECTORY}")
     end
 
