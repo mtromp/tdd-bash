@@ -13,6 +13,8 @@ PUSH_HELP="  (use \"git push\" to publish your local commits)\n\n"
 STAGED_DIR="Changes to be committed:\n"
 STAGED_HELP="  (use \"git reset HEAD <file>...\" to unstage)\n\n"
 
+UNTRACKED_FILES="Untracked files:"
+
 PWD_DIRECTORY='/Users/mtromp/workspace'
 
 describe 'TestGitStatus' do
@@ -80,5 +82,19 @@ describe 'TestGitStatus' do
       @stdout, @stderr, @status = stubbed_env.execute("#{SCRIPT}")
       expect(@stdout).to be == "#{PWD_DIRECTORY}\n"
     end
+  end
+  context 'git repository has untracked changes' do
+    before(:each) do
+      git_mock.with_args('status')
+              .returns_exitstatus(0)
+              .outputs("#{MASTER_BRANCH}#{UNTRACKED_FILES}")
+      pwd_mock.outputs("#{PWD_DIRECTORY}")
+    end
+
+    it 'prints directory when repo has untracked changes' do
+      @stdout, @stderr, @status = stubbed_env.execute("#{SCRIPT}")
+      expect(@stdout).to be == "#{PWD_DIRECTORY}\n"
+    end
+
   end
 end

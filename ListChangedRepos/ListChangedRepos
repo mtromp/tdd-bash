@@ -15,6 +15,9 @@ function isDirtyDirectory()
   if [[ ${gitStatus} =~ "Changes to be committed" ]]; then
     isDirty="true"
   fi
+  if [[ ${gitStatus} =~ "Untracked files" ]]; then
+    isDirty="true"
+  fi
 }
 function main()
 {
